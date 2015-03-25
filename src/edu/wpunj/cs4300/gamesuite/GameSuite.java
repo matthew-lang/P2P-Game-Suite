@@ -1,4 +1,7 @@
 package edu.wpunj.cs4300.gamesuite;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import edu.wpunj.cs4300.gamesuite.game.TicTacToe;
@@ -6,8 +9,9 @@ import edu.wpunj.cs4300.gamesuite.game.TicTacToe;
 
 public class GameSuite {
 	
-	private enum MainMenuOption {LOOK_FOR_GAME, HOST_A_GAME, CHANGE_NAME}
+	private enum MainMenuOption {LOOK_FOR_GAME, HOST_A_GAME, DIRECT_CONNECT, CHANGE_NAME}
 	private enum GameType {TIC_TAC_TOE}
+	public static final int GAME_PORT = 5693;
 	
 	private Scanner consoleIn;
 	private String username;
@@ -47,6 +51,9 @@ public class GameSuite {
 		case CHANGE_NAME:
 			changeName();
 			break;
+		case DIRECT_CONNECT:
+			directConnect();
+			break;
 		}
 	}
 	
@@ -65,8 +72,40 @@ public class GameSuite {
 		game.lookForPlayers();
 	}
 	public void findGame() {
+		System.out.println("===UNDER CONSTRUCTION===");
+	}
+	public void directConnect(){
+		System.out.print("Please enter the host(ip) address: ");
+		String ip = consoleIn.nextLine();
+		while(ip.isEmpty()){
+			ip = consoleIn.nextLine();
+		}
+		System.out.println("IP: "+ip);
+		connectToGame(ip);
+	}
+	
+	public void connectToGame(String ip){
+		Socket s = null;
+		try {
+			s = new Socket(ip, GAME_PORT);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.out.println("Unknown Host");
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Unable to establish connection to host");
+			return;
+		}
+		try {
+			Game game = Game.joinGame(s);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
+	
 	//Shows a list of options for user to enter input. Q will always be one of the options to go back and will return null
 	public static <T> T showMenu(Scanner in, T[] items) {
 		int index = 0;

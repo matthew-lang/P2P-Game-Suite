@@ -1,0 +1,11 @@
+#establish connection
+server: open serversocket
+client: connect to server
+server: sends name of game
+#all games are turn based so server always goes first while the client waits
+while game is not over:
+	server: sends server move
+	client: sends client move
+server: determine winner or tie
+client: disconnects from server
+server: disconnects from client

@@ -13,8 +13,11 @@ public class TicTacToe extends Game{
 	private JFrame frame;
 	private JPanel panel;
 	Thread mainThread;
-	public TicTacToe(boolean isHost) {
-		super(isHost);
+	public TicTacToe(Object o){
+		
+		this();
+	}
+	public TicTacToe() {
 		mainThread = Thread.currentThread();
 		frame = new JFrame("P2PGS - Tic Tac Toe");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -50,13 +53,11 @@ public class TicTacToe extends Game{
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		//System.out.println("Main Thread going to sleep.");
 		try {
 			wait();
 		} catch (InterruptedException e) {
-			//e.printStackTrace();
+			
 		}
-		//System.out.println("Main Thread has been waken up!");
 	}
 	
 }
