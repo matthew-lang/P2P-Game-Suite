@@ -51,8 +51,7 @@ public abstract class Game {
 		clientName = getMessage(30000);
 		System.out.println("Player "+clientName+" has been found! Starting game.");
 		start();
-		ss.close();
-		//TODO close server sockets
+		ss.close(); 
 	}
 	
 	

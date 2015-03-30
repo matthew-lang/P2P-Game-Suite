@@ -104,9 +104,7 @@ public class GameSuite {
 		try {
 			Game game = Game.joinGame(username, s);
 			game.start();
-			//TODO close sockets
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
