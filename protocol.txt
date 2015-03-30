@@ -1,7 +1,7 @@
 #establish connection
 server: open serversocket
 client: connect to server
-server: sends name of game
+server: sends name of game and player name
 #all games are turn based so server always goes first while the client waits
 while game is not over:
 	server: sends server move

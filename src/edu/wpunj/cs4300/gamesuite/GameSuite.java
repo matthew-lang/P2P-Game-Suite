@@ -10,7 +10,7 @@ import edu.wpunj.cs4300.gamesuite.game.TicTacToe;
 public class GameSuite {
 	
 	private enum MainMenuOption {LOOK_FOR_GAME, HOST_A_GAME, DIRECT_CONNECT, CHANGE_NAME}
-	private enum GameType {TIC_TAC_TOE}
+	public enum GameType {TIC_TAC_TOE}
 	public static final int GAME_PORT = 5693;
 	
 	private Scanner consoleIn;
@@ -66,10 +66,14 @@ public class GameSuite {
 		}
 		switch(gameType) {
 		case TIC_TAC_TOE:
-			game = new TicTacToe(true);
+			game = new TicTacToe(username);
 			break;
 		}
-		game.lookForPlayers();
+		try {
+			game.lookForPlayers();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	public void findGame() {
 		System.out.println("===UNDER CONSTRUCTION===");
@@ -98,7 +102,9 @@ public class GameSuite {
 			return;
 		}
 		try {
-			Game game = Game.joinGame(s);
+			Game game = Game.joinGame(username, s);
+			game.start();
+			//TODO close sockets
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
