@@ -33,6 +33,10 @@ public class TicTacToe extends Game{
 		super(hostName, GameType.TIC_TAC_TOE);
 		initialize();
 	}
+	
+	/**
+	 * initialize the JFrame, add the listeners
+	 */
 	public void initialize() {
 		mainThread = Thread.currentThread();
 		frame = new JFrame("P2PGS - Tic Tac Toe");
@@ -58,6 +62,9 @@ public class TicTacToe extends Game{
 		initializeGraphics();
 	}
 	
+	/**
+	 * release the main thread
+	 */
 	public void releaseThread() {
 		mainThread.interrupt();
 	}
@@ -78,12 +85,17 @@ public class TicTacToe extends Game{
 		}
 	}
 	
+	/**
+	 * Starts the thread that will wait for the other player to make their move
+	 */
 	private void startWaitingThread() {
 		Thread t = new Thread(new GameWorker());
 		t.start();
 	}
 	
-	
+	/**
+	 * Sets up the buttons in a 3x3 grid layout. Each button being a move on the TicTacToe board.
+	 */
 	public void initializeGraphics(){
 		panel.setLayout(new GridLayout(3,3));
 		buttons = new JButton[9];
@@ -134,10 +146,17 @@ public class TicTacToe extends Game{
 	
 	@Override
 	public void exitGame(){
+		//call super class's exitGame() so that we can shut the sockets down
+		super.exitGame();
+		//dispose the jFrame so that we do not have memory leaks!
 		frame.dispose();
+		//release the main thread so that the menu plays in terminal again
 		releaseThread();
 	}
-	
+	/**
+	 * Handles the button events for when a button is pressed/ move is made
+	 * 
+	 */
 	public class TicTacToeButtonListener implements ActionListener {
 		private JButton button;
 		private int index;
@@ -148,8 +167,10 @@ public class TicTacToe extends Game{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//disable the button that the user clicked on and set the text to X
 			button.setEnabled(false);
 			button.setText("X");
+			//send the other user the info on which button was clicked
 			try {
 				sendMessage("MOVE " + index);
 			} catch (IOException e1) {
@@ -157,18 +178,25 @@ public class TicTacToe extends Game{
 				e1.printStackTrace();
 				exitGame();
 			}
+			//check to see if the current user made the winning move
 			if(checkWinner("X")) {
 				JOptionPane.showMessageDialog(null, (isHost?hostName:clientName) + " WINS!");
 				exitGame();
 				return;
 			}
+			//get other player's next move
 			startWaitingThread();
 		}
 	}
-	
+	/**
+	 * Meant to run in a separate thread and will handle enabling and disabling each button
+	 * before and after the player's turn along with handling the other user's response.
+	 *
+	 */
 	public class GameWorker implements Runnable {
 		@Override
 		public void run() {
+			//Determine tie and disable buttons while we wait for other user to go.
 			boolean hasMoreTurns = false;
 			for(int i = 0;i<buttons.length;i++) {
 				if(buttons[i].isEnabled()) {
@@ -181,7 +209,6 @@ public class TicTacToe extends Game{
 				exitGame();
 				return;
 			}
-			//System.out.println("Waiting for Other player to go.");
 			String input = null;
 			try {
 				input = getMessage(60000);
