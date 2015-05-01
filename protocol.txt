@@ -1,11 +1,16 @@
-#establish connection
-server: open serversocket
-client: connect to server
-server: sends name of game and player name
-#all games are turn based so server always goes first while the client waits
-while game is not over:
-	server: sends server move
-	client: sends client move
-server: determine winner or tie
-client: disconnects from server
-server: disconnects from client
+peer1: open socket
+peer2: connect to peer1
+peer1: send name of game and peer1’s name to peer2
+peer2: send peer2’s name to peer1
+loop until a winner is determined
+	peer1:
+		send move to peer2
+		check to see if peer1 won
+		wait for peer2 to move
+		check to see if peer2 won
+	peer2:
+		wait for peer1 to move
+		check to see if peer1 won
+		send move to peer1
+		check to see if peer2 won
+close connection
